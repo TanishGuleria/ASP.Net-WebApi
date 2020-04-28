@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ASP.NetWebApi.Model;
 using Microsoft.EntityFrameworkCore;
-
+using ASP.NetWebApi.Services;
 namespace ASP.NetWebApi
 {
     public class Startup
@@ -29,6 +29,7 @@ namespace ASP.NetWebApi
         {
             services.AddControllers();
             services.AddDbContext<LaptopContext>(opt => opt.UseSqlServer(@"Data Source=DESKTOP-3VC7P4B;Initial Catalog=LaptopDb;Integrated Security=True"));
+            services.AddScoped<Ilaptop, LaptopRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

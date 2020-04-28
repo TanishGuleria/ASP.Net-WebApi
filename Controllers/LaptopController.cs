@@ -5,19 +5,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ASP.NetWebApi.Model;
+using ASP.NetWebApi.Services;
 namespace ASP.NetWebApi.Controllers
+    
 {
     [ApiVersion("1.0")]
     [Route("api/laptop")]
     [ApiController]
     public class LaptopController : ControllerBase
     {
-        private LaptopContext context;
-        public LaptopController(LaptopContext _context)
+       private Ilaptop laptopRepository;
+
+       public LaptopController(Ilaptop _laptopRepository)
         {
-            context = _context;
+            laptopRepository = _laptopRepository;
         }
-       
         // GET: api/Laptop
         [HttpGet]
        /* public IEnumerable<Laptop> Get()
@@ -29,20 +31,17 @@ namespace ASP.NetWebApi.Controllers
         public IEnumerable<Laptop> Get(int? PageNo , int? PageSize)
 
         {
+            var result = laptopRepository.GetLaptop(PageNo,PageSize);
 
+            return result;
 
-            var query = from p in context.Laptops.OrderBy(a => a.LaptopId) select p;
-            int currentpage = PageNo ?? 1;
-            int curremtpagesize = PageSize ?? 5;
-            var item = query.Skip((currentpage - 1) * curremtpagesize).Take(curremtpagesize).ToList();
-            return item;
         }
 
         // GET: api/Laptop/5
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)
         {
-            var result = context.Laptops.SingleOrDefault(m => m.LaptopId== id);
+            var result = laptopRepository.GetLaptopbyid(id);
            if(result == null)
             {
                 return NotFound("not found");
@@ -55,25 +54,16 @@ namespace ASP.NetWebApi.Controllers
         [HttpGet("sort")]
         public IEnumerable<Laptop> Getsort(string sort)
         {
-            if(sort == "desc")
-            {
-               return  context.Laptops.OrderByDescending(c => c.LaptopPrice);
-            }
-            else if(sort == "asc")
-            {
-                return context.Laptops.OrderBy(c => c.LaptopPrice);
-            }
-            else
-            {
-                return context.Laptops;
-            }
+
+            var result = laptopRepository.Getsort(sort);
+            return result;
         }
         //Serach laptop by  Brand Name
         [HttpGet("search")]
         public IEnumerable<Laptop> Getsearch(string s)
         {
-            var resut = context.Laptops.Where(p => p.LaptopBrand.StartsWith(s));
-            return resut;
+            var result = laptopRepository.Getsearch(s);
+            return result;
         }
         // POST: api/Laptop
         [HttpPost]
@@ -86,8 +76,7 @@ namespace ASP.NetWebApi.Controllers
             }
             else
             {
-                context.Laptops.Add(laptop);
-                context.SaveChanges();
+                laptopRepository.AddLaptop(laptop);
                 return StatusCode(StatusCodes.Status201Created);
 
             }
@@ -107,8 +96,7 @@ namespace ASP.NetWebApi.Controllers
             {
                 return BadRequest();
             }
-            context.Laptops.Update(laptop);
-            context.SaveChanges();
+            laptopRepository.UpdateLaptop(laptop);
             return Ok("updated");
          
         }
@@ -117,18 +105,10 @@ namespace ASP.NetWebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var result = context.Laptops.SingleOrDefault(c => c.LaptopId == id);
-            if (result == null)
-            {
-                return NotFound("not found");
-            }
-            else
-            {
-                context.Laptops.Remove(result);
-                context.SaveChanges(true);
+            laptopRepository.DeleteLaptop(id);
                 return Ok("deleted..");
 
             }
         }
     }
-}
+
