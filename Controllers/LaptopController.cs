@@ -39,7 +39,7 @@ namespace ASP.NetWebApi.Controllers
         }
         //Sort the list By price
         [HttpGet("sort")]
-        public IEnumerable<Laptop> Get(string sort)
+        public IEnumerable<Laptop> Getsort(string sort)
         {
             if(sort == "desc")
             {
@@ -54,7 +54,13 @@ namespace ASP.NetWebApi.Controllers
                 return context.Laptops;
             }
         }
-
+        //Serach laptop by  Brand Name
+        [HttpGet("search")]
+        public IEnumerable<Laptop> Getsearch(string s)
+        {
+            var resut = context.Laptops.Where(p => p.LaptopBrand.StartsWith(s));
+            return resut;
+        }
         // POST: api/Laptop
         [HttpPost]
         public IActionResult Post([FromBody] Laptop laptop)
