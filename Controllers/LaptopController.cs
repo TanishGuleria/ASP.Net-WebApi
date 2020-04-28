@@ -19,9 +19,17 @@ namespace ASP.NetWebApi.Controllers
        
         // GET: api/Laptop
         [HttpGet]
-        public IEnumerable<Laptop> Get()
+       /* public IEnumerable<Laptop> Get()
         {
             return context.Laptops;
+        }*/
+
+            //implement concept of pageing to show less data
+        public IEnumerable<Laptop> Get(int PageNo , int PageSize)
+        {
+            var query = from p in context.Laptops.OrderBy(a => a.LaptopId) select p;
+            var item = query.Skip((PageNo - 1) * PageSize).Take(PageSize).ToList();
+            return item;
         }
 
         // GET: api/Laptop/5
@@ -79,6 +87,7 @@ namespace ASP.NetWebApi.Controllers
             }
             
         }
+
 
         // PUT: api/Laptop/5
         [HttpPut("{id}")]
