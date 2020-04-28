@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using ASP.NetWebApi.Model;
 namespace ASP.NetWebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/laptop")]
     [ApiController]
     public class LaptopController : ControllerBase
     {
