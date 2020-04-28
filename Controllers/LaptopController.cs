@@ -25,10 +25,15 @@ namespace ASP.NetWebApi.Controllers
         }*/
 
             //implement concept of pageing to show less data
-        public IEnumerable<Laptop> Get(int PageNo , int PageSize)
+        public IEnumerable<Laptop> Get(int? PageNo , int? PageSize)
+
         {
+
+
             var query = from p in context.Laptops.OrderBy(a => a.LaptopId) select p;
-            var item = query.Skip((PageNo - 1) * PageSize).Take(PageSize).ToList();
+            int currentpage = PageNo ?? 1;
+            int curremtpagesize = PageSize ?? 5;
+            var item = query.Skip((currentpage - 1) * curremtpagesize).Take(curremtpagesize).ToList();
             return item;
         }
 
