@@ -37,6 +37,23 @@ namespace ASP.NetWebApi.Controllers
                 return Ok(result);
            
         }
+        //Sort the list By price
+        [HttpGet("sort")]
+        public IEnumerable<Laptop> Get(string sort)
+        {
+            if(sort == "desc")
+            {
+               return  context.Laptops.OrderByDescending(c => c.LaptopPrice);
+            }
+            else if(sort == "asc")
+            {
+                return context.Laptops.OrderBy(c => c.LaptopPrice);
+            }
+            else
+            {
+                return context.Laptops;
+            }
+        }
 
         // POST: api/Laptop
         [HttpPost]
